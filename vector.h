@@ -1,3 +1,7 @@
+//made by VoidPointerLover69, a vector header file for C
+//TODO: add pop, push_front and indexing
+
+
 #ifndef VECTOR_LIB
 #define VECTOR_LIB
 
@@ -33,8 +37,5 @@ if (vec->memsize >= vec->size) {\
 }\
 vec->arr[vec->size] = T;\
 vec->size++;
-
-
-
 
 #endif
