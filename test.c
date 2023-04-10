@@ -16,3 +16,6 @@ int main() {
     printf("%s", vecIndex(b, 1));
     return 0;
 }
+//output should be 
+//hello, world!
+//helloworld!
