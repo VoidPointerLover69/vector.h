@@ -1,9 +1,18 @@
 #include "vector.h"
 
 int main() {
-    newVector(a, int);
-    push_back(a, 5);
-    push_back(a, 4);
-    printf("%d", a->arr[1]);
+    newVector(a, char*);
+    push_back(a, "hello");
+    push_back(a, ", ");
+    push_back(a, "world!");
+    newVector(b, char*);
+    vecCopy(b, a);
+
+    printf("%s", vecIndex(b, 0));
+    printf("%s", vecIndex(b, 1));
+    printf("%s\n", vecIndex(b, 2));
+    vecPop(b, 1);
+    printf("%s", vecIndex(b, 0));
+    printf("%s", vecIndex(b, 1));
     return 0;
 }
