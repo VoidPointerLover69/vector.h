@@ -38,4 +38,32 @@ if (vec->memsize >= vec->size) {\
 vec->arr[vec->size] = T;\
 vec->size++;
 
+#define vecIndex(vec, ind) vec->arr[ind]
+
+#define vecSize(vec) vec->size
+
+#define vecMemsize(vec) vec->memsize
+
+#define vecType(vec) vec->type //might want to add printf-like types for formatting but i dont care enough 
+
+#define vec_t(vec) vector_##vec
+
+#define vecPop(vec, ind) \
+if (vec->size != 0) {\
+    for(int i = ind; i < vec->size; i++) {\
+        vec->arr[i] = vec->arr[i+1];\
+        vec->size--;\
+    }\
+}
+//as far as I've tested it it works though it might not be such a good idea but memcpy was a bitch so it will do until i find a bug
+
+#define vecCopy(vec1, vec2)\
+if (vec2->memsize > vec1->memsize) {\
+    vec1->memsize = vec2->memsize;\
+    vec1->arr = realloc(vec1->arr, vec1->memsize);\
+}\
+memcpy(vec1->arr, vec2->arr, vec2->size*sizeof(vec2->arr[0]));\
+vec1->size = vec2->size;   
+
+
 #endif
