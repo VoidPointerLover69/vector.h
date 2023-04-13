@@ -50,8 +50,8 @@ vec->size++;
 if (vec->size != 0) {\
     for(int i = ind; i < vec->size; i++) {\
         vec->arr[i] = vec->arr[i+1];\
-        vec->size--;\
     }\
+    vec->size--;\
 }
 //as far as I've tested it it works though it might not be such a good idea but memcpy was a bitch so it will do until i find a bug
 
