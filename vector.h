@@ -36,6 +36,19 @@ if (vec->memsize >= vec->size) {\
 vec->arr[vec->size] = T;\
 vec->size++;
 
+#define push_front(vec, T) \
+if (vec->memsize >= vec->size) {\
+    size_t new_memsize = vec->memsize+sizeof(T)+8;\
+    void* new_arr = realloc(vec->arr, new_memsize);\
+    vec->arr = new_arr;\
+    vec->memsize = new_memsize;\
+}\
+for (int i = vec->size; i > 0; i--) {\
+    vec->arr[i] = vec->arr[i-1];\
+}\
+vec->arr[0] = (T);\
+vec->size++;
+
 #define vecIndex(vec, ind) vec->arr[ind]
 
 #define vecSize(vec) vec->size
