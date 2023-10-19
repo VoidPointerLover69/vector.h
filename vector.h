@@ -10,11 +10,12 @@ typedef struct {\
     t* arr;\
     size_t size;\
     size_t memsize;\
-} vector_##t;\
-void clean_vec_##t(vector_##t** vec) {\
+} vector__##t;\
+void clean_vec_##t(vector__##t** vec) {\
     free((*vec)->arr);\
     free(*vec);\
-}
+}\
+typedef vector__##t* vector_##t;
 
 #define newVector(vect, t) \
 vector_##t* __attribute__((__cleanup__(clean_vec_##t))) vect = malloc(sizeof(vector_##t));\
