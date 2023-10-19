@@ -1,5 +1,3 @@
-
-
 #ifndef VECTOR_LIB
 #define VECTOR_LIB
 
@@ -7,24 +5,22 @@
 #include <string.h>
 #include <stdio.h>
 
-#define newVector(vect, t) \
+#define declVector(t) \
 typedef struct {\
     t* arr;\
     size_t size;\
     size_t memsize;\
-    char* type;\
-} vector_##vect;\
-void clean_vec_##vect(vector_##vect** vec) {\
+} vector_##t;\
+void clean_vec_##t(vector_##t** vec) {\
     free((*vec)->arr);\
-    free((*vec)->type);\
     free(*vec);\
-}\
-vector_##vect* __attribute__((__cleanup__(clean_vec_##vect))) vect = malloc(sizeof(vector_##vect));\
+}
+
+#define newVector(vect, t) \
+vector_##t* __attribute__((__cleanup__(clean_vec_##t))) vect = malloc(sizeof(vector_##t));\
 vect->arr = malloc(16);\
 vect->size = 0;\
 vect->memsize = 16;\
-vect->type = malloc(strlen(#t)+1);\
-strcpy(vect->type, #t);
 
 #define push_back(vec, T) \
 if (vec->memsize >= vec->size) {\
@@ -54,10 +50,6 @@ vec->size++;
 #define vecSize(vec) vec->size
 
 #define vecMemsize(vec) vec->memsize
-
-#define vecType(vec) vec->type //might want to add printf-like types for formatting but i dont care enough 
-
-#define vec_t(vec) vector_##vec
 
 #define vecPop(vec, ind) \
 if (vec->size != 0) {\
