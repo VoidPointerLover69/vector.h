@@ -5,7 +5,7 @@
 #include <string.h>
 #include <stdio.h>
 
-#define declVector(t) \
+#define defVector(t) \
 typedef struct {\
     t* arr;\
     size_t size;\
