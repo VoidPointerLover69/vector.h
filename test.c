@@ -2,7 +2,7 @@
 #include <stdio.h>
 
 typedef char* string; //only works like this because of the pointer character
-declVector(string);
+defVector(string);
 
 void printVector(vector_string* vec) {
 	for(int i = 0; i < vecSize(vec); i++) {
