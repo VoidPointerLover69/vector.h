@@ -4,7 +4,7 @@
 typedef char* string; //only works like this because of the pointer character
 defVector(string);
 
-void printVector(vector_string* vec) {
+void printVector(vector_string vec) {
 	for(int i = 0; i < vecSize(vec); i++) {
 		printf("%s ", vecIndex(vec, i));
 	}
