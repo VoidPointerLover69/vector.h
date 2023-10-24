@@ -58,7 +58,7 @@
 		vec->arr = new_arr;\
 		vec->memsize = new_memsize;\
 	}\
-	for (int i = vec->size; i < lols; i ++) {\
+	for (int i = vec->size; i < lols+vec->size; i ++) {\
 		vec->arr[i] = lol[i-vec->size];\
 	}\
 	vec->size += lols;\
