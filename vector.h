@@ -27,42 +27,42 @@
 
 //a variadic macro, using typeof() and __VA_ARGS__ to create an array of arguments given and pushes infrost of vector
 #define push_front(vec, ...) \
-	{\
-		typeof(*(vec->arr)) lol[] = {__VA_ARGS__};\
-		size_t lols = sizeof(lol)/sizeof(lol[0]);\
-		if (vec->memsize <= vec->size) {\
-			size_t new_memsize = vec->memsize+lols+sizeof(lol[0]);\
-			void* new_arr = realloc(vec->arr, new_memsize);\
-			vec->arr = new_arr;\
-			vec->memsize = new_memsize;\
+{\
+	typeof(*(vec->arr)) lol[] = {__VA_ARGS__};\
+	size_t lols = sizeof(lol)/sizeof(lol[0]);\
+	if (vec->memsize <= vec->size) {\
+		size_t new_memsize = vec->memsize+lols+sizeof(lol[0]);\
+		void* new_arr = realloc(vec->arr, new_memsize);\
+		vec->arr = new_arr;\
+		vec->memsize = new_memsize;\
+	}\
+	for (int i = 0; i < lols; i++) {\
+		for (int j = vec->size+i; j > 0; j--) {\
+			vec->arr[j] = vec->arr[j-1];\
 		}\
-		for (int i = 0; i < lols; i++) {\
-			for (int j = vec->size+i; j > 0; j--) {\
-				vec->arr[j] = vec->arr[j-1];\
-			}\
-		}\
-		for (int i = 0; i < lols; i++) {\
-			vec->arr[i] = lol[i];\
-		}\
-		vec->size += lols;\
-	}
+	}\
+	for (int i = 0; i < lols; i++) {\
+		vec->arr[i] = lol[i];\
+	}\
+	vec->size += lols;\
+}
 
 //same as push_front but it pushes back
 #define push_back(vec, ...) \
-	{\
-		typeof(*(vec->arr)) lol[] = {__VA_ARGS__};\
-		size_t lols = sizeof(lol)/sizeof(lol[0]);\
-		if (vec->memsize <= vec->size+1) {\
-			size_t new_memsize = vec->memsize+lols+sizeof(lol[0]);\
-			void* new_arr = realloc(vec->arr, new_memsize);\
-			vec->arr = new_arr;\
-			vec->memsize = new_memsize;\
-		}\
-		for (int i = vec->size; i < lols; i ++) {\
-			vec->arr[i] = lol[i-vec->size];\
-		}\
-		vec->size += lols;\
-	}
+{\
+	typeof(*(vec->arr)) lol[] = {__VA_ARGS__};\
+	size_t lols = sizeof(lol)/sizeof(lol[0]);\
+	if (vec->memsize <= vec->size+1) {\
+		size_t new_memsize = vec->memsize+lols+sizeof(lol[0]);\
+		void* new_arr = realloc(vec->arr, new_memsize);\
+		vec->arr = new_arr;\
+		vec->memsize = new_memsize;\
+	}\
+	for (int i = vec->size; i < lols; i ++) {\
+		vec->arr[i] = lol[i-vec->size];\
+	}\
+	vec->size += lols;\
+}
 
 //concatenates two vectors 
 #define vecCat(dest, source) \
@@ -85,7 +85,7 @@
 		dest->arr[i+source->size] = dest->arr[i]; \
 	} \
 	for (int i = 0; i < source->size; i++) { \
-			dest->arr[i] = source->arr[i]; \
+		dest->arr[i] = source->arr[i]; \
 	} \
 	dest->size += source->size; \
 
@@ -95,17 +95,16 @@
 		vec1->arr = realloc(vec1->arr, vec2->memsize+sizeof(*vec1->arr));\
 	else if (vec1->memsize > vec2->memsize)\
 		vec2->arr = realloc(vec2->arr, vec1->memsize+sizeof(*vec1->arr));\
-	\
 	{\
-		void* idk = malloc(vec1->memsize);\
-		memcpy(idk, vec1->arr, vec1->size*sizeof(vec1->arr[0]));\
-		memcpy(vec1->arr, vec2->arr, vec2->size*sizeof(vec1->arr[0])); \
-		memcpy(vec2->arr, idk, vec1->size*sizeof(vec1->arr[0]));\
-		size_t bug = vec1->size;\
-		vec1->size = vec2->size;\
-		vec2->size = bug;\
-		free(idk);\
-	}\
+	void* idk = malloc(vec1->memsize);\
+	memcpy(idk, vec1->arr, vec1->size*sizeof(vec1->arr[0]));\
+	memcpy(vec1->arr, vec2->arr, vec2->size*sizeof(vec1->arr[0])); \
+	memcpy(vec2->arr, idk, vec1->size*sizeof(vec1->arr[0]));\
+	size_t bug = vec1->size;\
+	vec1->size = vec2->size;\
+	vec2->size = bug;\
+	free(idk);\
+	}
 
 #define vecIndex(vec, ind) vec->arr[ind]
 
