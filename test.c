@@ -14,8 +14,7 @@ int main() {
 	newVector(a, string);
 	
 	push_front(a, "Hello");
-	push_back(a, "...");
-	push_back(a, "World!\n");
+	push_back(a, "...", "World!\n");
 	push_front(a, "...");
 	
 	printVector(a);
