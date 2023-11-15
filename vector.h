@@ -30,32 +30,31 @@
 #define push_front(vec, ...) {\
 		vecType(vec) lol[] = {__VA_ARGS__};\
 		size_t lols = sizeof(lol)/sizeof(lol[0]);\
-		if (vec->capacity <= vec->size) {\
+		if (vec->capacity < vec->size+sizeof(lols)) {\
 			size_t new_capacity = vec->capacity+lols*2;\
 			vec->arr = realloc(vec->arr, new_capacity*sizeof(lol[0]));\
 			vec->capacity = new_capacity;\
 		}\
-		if (vec->size > 0) {\
-			memmove(vec->arr+vec->size, vec->arr, vec->size*sizeof(vecType(vec)));\
-			memmove(vec->arr, lol, sizeof(lol));\
-		}\
-		else {\
-			memmove(vec->arr, lol, sizeof(lol));\
-		}\
+		if (vec->size > 0)\
+			memmove(vec->arr+lols, vec->arr, vec->size*sizeof(vecType(vec)));\
+\
+		memmove(vec->arr, lol, sizeof(lol));\
 		vec->size += lols;\
 }
 
 //same as push_front but it pushes back
 #define push_back(vec, ...) {\
-		vecType(vec) lol[] = {__VA_ARGS__};\
-		size_t lols = sizeof(lol)/sizeof(lol[0]);\
-		if (vec->capacity <= vec->size+1) {\
-			size_t new_capacity = vec->capacity+lols*2;\
-			vec->arr = realloc(vec->arr, new_capacity*sizeof(lol[0]));\
-			vec->capacity = new_capacity;\
-		}\
-		memmove(vec->arr+vec->size, lol, sizeof(lol));\
-		vec->size += lols;\
+	vecType(vec) lol[] = {__VA_ARGS__};\
+	size_t lols = sizeof(lol)/sizeof(lol[0]);\
+\
+	if (vec->capacity <= vec->size+lols) {\
+		size_t new_capacity = vec->capacity+lols*2;\
+\
+		vec->arr = realloc(vec->arr, new_capacity*sizeof(lol[0]));\
+		vec->capacity = new_capacity;\
+	}\
+	memmove(vec->arr+vec->size, lol, sizeof(lol));\
+	vec->size += lols;\
 }
 
 
@@ -72,6 +71,7 @@
 \
 		memmove(vec->arr+Start_, hahaha_t, sizeof(hahaha_t));\
 	}\
+\
 	if(vecSize(vec) < End_+1)\
 		vecSize(vec) = End_+1;\
 }
@@ -112,36 +112,51 @@
 	dest->size += source->size;\
 
 //pushes source infront of dest 
-#define vecCatfr(dest, source) \
+#define vecCatfr(dest, source) {\
 	if ((dest->size + source->size) > dest->capacity) { \
-		dest->arr = realloc(dest->arr, dest->size + source->size + sizeof(*dest->arr));\
+		dest->arr = realloc(dest->arr, (dest->size + source->size*2)*sizeof(vecType(dest)));\
 		dest->capacity = dest->size + source->size; \
 	}\
-	memmove(dest->arr+source->size, dest->arr, dest->size*sizeof(vecType(dest)));\
+	if (dest->size > 0)\
+		memmove(dest->arr+source->size, dest->arr, dest->size*sizeof(vecType(dest)));\
+\
 	memmove(dest->arr, source->arr, source->size*sizeof(vecType(dest)));\
 	dest->size += source->size; \
+}
 
 //swaps two vectors
-#define vecSwap(vec1, vec2) \
-	if (vec1->capacity < vec2->capacity)\
-		vec1->arr = realloc(vec1->arr, vec2->capacity+sizeof(*vec1->arr));\
-	else if (vec1->capacity > vec2->capacity)\
-		vec2->arr = realloc(vec2->arr, vec1->capacity+sizeof(*vec1->arr));\
-	\
-	{\
-		vecType(vec1)* idk = malloc(vec1->capacity);\
+#define vecSwap(vec1, vec2) {\
+	if (vec1->capacity != vec2->capacity) {\
+		size_t pp_ = vec1->capacity;\
+		vec1->capacity = vec2->capacity;\
+		vec2->capacity = pp_;\
+	}\
 \
-		memcpy(idk, vec1->arr, vec1->size*sizeof(vec1->arr[0]));\
+		vecType(vec1)* idk = malloc(vec1->capacity*sizeof(vecType(vec1)));\
 \
-		memcpy(vec1->arr, vec2->arr, vec2->size*sizeof(vec1->arr[0])); \
+		memcpy(idk, vec1->arr, vec1->size*sizeof(vecType(vec1)));\
 \
-		memcpy(vec2->arr, idk, vec1->size*sizeof(vec1->arr[0]));\
+		memcpy(vec1->arr, vec2->arr, vec2->size*sizeof(vecType(vec1))); \
+\
+		memcpy(vec2->arr, idk, vec1->size*sizeof(vecType(vec1)));\
 \
 		size_t bug = vec1->size;\
 		vec1->size = vec2->size;\
 		vec2->size = bug;\
 		free(idk);\
+}\
+
+#define vecReverse(vec, Start_, End_) {\
+	vecType(vec) swap;\
+	vecType(vec)* lo = vec->arr;\
+	vecType(vec)* hi = vec->arr + (End_-Start_);\
+\
+	while (lo < hi) {\
+		swap = *lo;\
+		*lo++ = *hi;\
+		*hi-- = swap;\
 	}\
+}
 			
 #define typeSize(_T_) sizeof(typeof(_T_))
 
@@ -155,7 +170,7 @@
 
 #define vecType(vec) typeof(*(vec->arr))
 
-#define vecClear(vec) vec->size = 0;
+#define vecClear(vec) vec->size = 0
 
 #define typeofVec(vec) typeof(vec)
 
