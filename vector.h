@@ -4,7 +4,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
-#include <stdarg.h>
 
 //creates a new vector for the given type and a cleanup function
 #define defVector(t) \
