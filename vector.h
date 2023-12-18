@@ -156,8 +156,6 @@
 		*hi-- = swap;\
 	}\
 }
-			
-#define typeSize(_T_) sizeof(typeof(_T_))
 
 #define vecIndex(vec, ind) vec->arr[ind]
 
@@ -170,8 +168,6 @@
 #define vecType(vec) typeof(*(vec->arr))
 
 #define vecClear(vec) vec->size = 0
-
-#define typeofVec(vec) typeof(vec)
 
 #define vecPop(vec, ind) {\
 	if(ind != 0 && ind <= vec->size && vec->size != 0) {\
