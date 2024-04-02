@@ -143,17 +143,32 @@
 		vec1->size = vec2->size;\
 		vec2->size = bug;\
 		free(idk);\
-}\
+}
 
-#define vecReverse(vec, Start_, End_) {\
-	vecType(vec) swap;\
-	vecType(vec)* lo = vec->arr;\
-	vecType(vec)* hi = vec->arr + (End_-Start_);\
+#define vecReverse(vec, ...) {\
+	size_t lol[] = {0, ##__VA_ARGS__};\
+	if (sizeof(lol)/sizeof(size_t) == 3){\
 \
-	while (lo < hi) {\
+		vecType(vec) swap;\
+		vecType(vec)* lo = vec->arr;\
+		vecType(vec)* hi = vec->arr + (lol[2]-lol[1]);\
+\
+		while (lo < hi) {\
 		swap = *lo;\
 		*lo++ = *hi;\
 		*hi-- = swap;\
+		}\
+	}\
+	else {\
+		vecType(vec) swap;\
+		vecType(vec)* lo = vec->arr;\
+		vecType(vec)* hi = vec->arr + vecSize(vec)-1;\
+\
+		while (lo < hi) {\
+		swap = *lo;\
+		*lo++ = *hi;\
+		*hi-- = swap;\
+		}\
 	}\
 }
 
@@ -169,11 +184,16 @@
 
 #define vecClear(vec) vec->size = 0
 
-#define vecPop(vec, ind) {\
-	if(ind != 0 && ind <= vec->size && vec->size != 0) {\
-		memmove(vec->arr+ind, vec->arr+ind+1, (vec->size-ind)*sizeof(vecType(vec)));\
-		vec->size--;\
+#define vecPop(vec, ...) {\
+	int lol[] = {vecSize(vec), ##__VA_ARGS__};\
+	if (sizeof(lol)/sizeof(int) != 1) {\
+		if(lol[1] <= vec->size && vec->size != 0) {\
+			memmove(vec->arr+lol[1], vec->arr+lol[1]+1, (vec->size-lol[1])*sizeof(vecType(vec)));\
+			vec->size--;\
+		}\
 	}\
+	else\
+		vecSize(vec)--;\
 }	
 //as far as I've tested it it works though it might not be such a good idea but memcpy was a bitch so it will do until i find a bug
 
