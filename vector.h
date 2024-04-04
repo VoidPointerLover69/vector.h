@@ -63,9 +63,9 @@
 	else {\
 		typeof(T) hahaha_t[] = {[0 ... End_-Start_] = T};\
 \
-		if (vecCapacity(vec)*typeSize(T) < sizeof(hahaha_t)) {\
+		if (vecCapacity(vec)*sizeof(T) < sizeof(hahaha_t)) {\
 			vec->arr = realloc(vec->arr, vec->capacity+sizeof(hahaha_t)*2);\
-			vec->capacity += sizeof(hahaha_t)/typeSize(T);\
+			vec->capacity += sizeof(hahaha_t)/sizeof(T);\
 		}\
 \
 		memmove(vec->arr+Start_, hahaha_t, sizeof(hahaha_t));\
