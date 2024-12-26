@@ -61,14 +61,15 @@
 	if (Start_ == End_)\
 		vec->arr[Start_] = T;\
 	else {\
-		typeof(T) hahaha_t[] = {[0 ... End_-Start_] = T};\
 \
-		if (vecCapacity(vec)*sizeof(T) < sizeof(hahaha_t)) {\
-			vec->arr = realloc(vec->arr, vec->capacity+sizeof(hahaha_t)*2);\
-			vec->capacity += sizeof(hahaha_t)/sizeof(T);\
+		if (vecCapacity(vec) < End_-Start_) {\
+			vec->arr = realloc(vec->arr, vec->capacity+(End_-Start_)*2);\
+			vec->capacity += End_-Start_+(End_-Start_)*2;\
 		}\
 \
-		memmove(vec->arr+Start_, hahaha_t, sizeof(hahaha_t));\
+		for (int i = Start_; i < End_; i++) \
+			vec->arr[i] = T;\
+\
 	}\
 \
 	if(vecSize(vec) < End_+1)\
@@ -195,7 +196,6 @@
 	else\
 		vecSize(vec)--;\
 }	
-//as far as I've tested it it works though it might not be such a good idea but memcpy was a bitch so it will do until i find a bug
 
 #define vecCopy(vec1, vec2)\
 	if (vec2->capacity > vec1->capacity) {\
@@ -204,5 +204,78 @@
 	}\
 	memcpy(vec1->arr, vec2->arr, vec2->size*sizeof(vec2->arr[0]));\
 	vec1->size = vec2->size;   
-	
+
+#define vecLinSearch(vec, T, ret, ...) {\
+	ret = -1;\
+	int start = 0;\
+	int end = vec->size;\
+	int lol[] = {0, ##__VA_ARGS__};\
+\
+	if (sizeof(lol)/sizeof(int) != 1) {\
+		start = lol[1];\
+		end = lol[2];\
+        }\
+\
+	for (int i = start; i <= end; i++) {\
+		if (vec->arr[i] == T)\
+			ret = i;\
+	}\
+}
+
+#define vecBinSearch(vec, T, ret, ...) {\
+	ret = -1;\
+	int start = 0;\
+	int end = vec->size;\
+	int lol[] = {0, ##__VA_ARGS__};\
+\
+	if (sizeof(lol)/sizeof(int) != 1) {\
+		start = lol[1];\
+		end = lol[2];\
+	}\
+\
+	int mid = 0;\
+	while (start <= end) {\
+		mid = start + (end-start)/2;\
+\
+		if (vec->arr[mid] == T) {\
+			ret = mid;\
+			break;\
+		}\
+\
+		if (vec->arr[mid] < T)\
+			start = mid+1;\
+		else\
+			end = mid-1;\
+	}\
+}\
+
+#define vecResize(vec, n, ...) {\
+	vecType(vec) lol[] = {__VA_ARGS__};\
+\
+	if(n <= vec->size) {\
+		vec->size = n;\
+	}\
+\
+	if (n > vec->capacity) {\
+		vecType(vec)* oof = malloc(vec->capacity);\
+\
+		memcpy(oof, vec->arr, vec->size*sizeof(*oof));\
+\
+		vec->arr = realloc(vec->arr, n);\
+\
+		memcpy(vec->arr, oof, vec->size*sizeof(*oof));\
+\
+		free(oof);\
+		vec->capacity = n;\
+	}\
+\
+	if (n > vec->size && sizeof(lol)/sizeof(vecType(vec))) {\
+		for (int i = vec->size; i < n; i++) {\
+			vec->arr[i] = lol[0];\
+		}\
+\
+		vec->size = n;\
+	}\
+}
+
 #endif
